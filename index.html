@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UGC Ad Generator — AI-Powered Marketing Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;
+  --surface:#111118;
+  --surface2:#18181f;
+  --surface3:#1e1e27;
+  --border:#2a2a38;
+  --border2:#35354a;
+  --accent:#7c5cfc;
+  --accent2:#a78bfa;
+  --accent3:#c4b5fd;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --pink:#ec4899;
+  --text:#f1f0ff;
+  --text2:#a8a7c0;
+  --text3:#6b6a84;
+  --radius:12px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+body{display:flex;overflow:hidden}
+
+/* ── Sidebar ── */
+.sidebar{width:230px;min-width:230px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh}
+.logo{padding:24px 20px 18px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border)}
+.logo-icon{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--text);letter-spacing:-0.4px}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:0.6px;text-transform:uppercase;margin-top:1px}
+.nav{padding:18px 12px;flex:1;overflow-y:auto}
+.nav-section{margin-bottom:20px}
+.nav-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:8px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13.5px;color:var(--text2);margin-bottom:2px;transition:all 0.15s;text-decoration:none}
+.nav-item svg{width:16px;height:16px;opacity:0.65;flex-shrink:0}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item:hover svg{opacity:0.9}
+.nav-item.active{background:rgba(124,92,252,0.15);color:var(--accent3)}
+.nav-item.active svg{opacity:1}
+.sidebar-divider{height:1px;background:var(--border);margin:4px 0 16px}
+.sidebar-footer{padding:16px 16px 20px;border-top:1px solid var(--border)}
+.ai-badge{display:flex;align-items:center;gap:7px;background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.2);border-radius:8px;padding:9px 12px}
+.ai-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px rgba(34,197,94,0.6);flex-shrink:0}
+.ai-badge span{font-size:12px;color:var(--accent2);font-weight:500}
+
+/* ── Main area ── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
+.topbar{padding:18px 30px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-left h1{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;letter-spacing:-0.4px}
+.topbar-left p{font-size:12.5px;color:var(--text3);margin-top:3px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.platform-pill{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all 0.15s}
+.platform-pill:hover{border-color:var(--accent);color:var(--accent3)}
+.status-chip{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:5px 12px;font-size:12px;color:#86efac}
+.status-chip span{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* ── Content Grid ── */
+.content{flex:1;overflow-y:auto;padding:26px 30px;display:grid;grid-template-columns:400px 1fr;gap:22px;align-items:start}
+
+/* ── Form Panel ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.panel-icon{width:30px;height:30px;border-radius:8px;background:rgba(124,92,252,0.15);display:flex;align-items:center;justify-content:center}
+.panel-header h2{font-family:'Syne',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:-0.2px}
+.panel-body{padding:22px 20px}
+.field{margin-bottom:17px}
+.field label{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;font-weight:600}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:13.5px;padding:10px 13px;
+  outline:none;transition:border-color 0.15s,background 0.15s
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:var(--surface3)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field select{
+  cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6a84' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;
+}
+.field textarea{resize:vertical}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:6px 13px;border-radius:20px;border:1px solid var(--border2);cursor:pointer;font-size:12.5px;color:var(--text2);background:var(--surface2);transition:all 0.15s;user-select:none}
+.chip:hover{border-color:var(--accent);color:var(--accent3);background:rgba(124,92,252,0.07)}
+.chip.selected{background:rgba(124,92,252,0.15);border-color:var(--accent);color:var(--accent3)}
+
+.gen-btn{
+  width:100%;padding:13px;background:var(--accent);border:none;border-radius:10px;
+  color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;
+  letter-spacing:0.2px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:6px
+}
+.gen-btn:hover:not(:disabled){background:#9170ff;transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,92,252,0.3)}
+.gen-btn:active:not(:disabled){transform:translateY(0)}
+.gen-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Output ── */
+.output-panel{display:flex;flex-direction:column;gap:16px}
+.output-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.oc-header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.oc-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)}
+.oc-badge{font-size:10.5px;padding:3px 9px;border-radius:12px;font-weight:600}
+.badge-purple{background:rgba(124,92,252,0.15);color:var(--accent3);border:1px solid rgba(124,92,252,0.2)}
+.badge-green{background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.badge-amber{background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.2)}
+.badge-pink{background:rgba(236,72,153,0.1);color:#f9a8d4;border:1px solid rgba(236,72,153,0.2)}
+.oc-body{padding:16px 18px}
+
+.hook-item{
+  padding:13px 15px;background:var(--surface2);border-radius:9px;margin-bottom:9px;
+  border-left:3px solid var(--accent);font-size:13.5px;line-height:1.55;cursor:pointer;
+  transition:background 0.15s;position:relative
+}
+.hook-item:last-child{margin-bottom:0}
+.hook-item:hover{background:var(--surface3)}
+.hook-num{font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:0.7px;font-weight:700;margin-bottom:5px}
+.hook-copy-hint{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text3);opacity:0;transition:opacity 0.15s}
+.hook-item:hover .hook-copy-hint{opacity:1}
+
+.script-block{
+  background:var(--surface2);border-radius:9px;padding:15px 17px;
+  font-size:13.5px;line-height:1.75;color:var(--text2);white-space:pre-wrap;word-break:break-word
+}
+.block-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;font-weight:600}
+
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cta-item{
+  background:var(--surface2);border-radius:9px;padding:11px 14px;font-size:13px;
+  border:1px solid var(--border);text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text2);line-height:1.4
+}
+.cta-item:hover{border-color:var(--amber);color:#fcd34d;background:rgba(245,158,11,0.05)}
+.cta-item:last-child:nth-child(odd){grid-column:1/-1}
+
+.caption-block{
+  background:var(--surface2);border-radius:9px;padding:15px 17px;
+  font-size:13.5px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word
+}
+
+.copy-btn{
+  background:transparent;border:1px solid var(--border2);border-radius:7px;color:var(--text3);
+  font-size:11.5px;padding:5px 11px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;
+  font-family:'DM Sans',sans-serif
+}
+.copy-btn:hover{color:var(--text);border-color:var(--border)}
+.copy-btn.copied{color:var(--green);border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05)}
+
+/* ── Empty State ── */
+.empty-state{padding:50px 30px;text-align:center}
+.empty-glow{width:64px;height:64px;border-radius:50%;background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.empty-state h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;margin-bottom:8px}
+.empty-state p{color:var(--text3);font-size:13px;line-height:1.65;max-width:260px;margin:0 auto}
+
+/* ── Error State ── */
+.error-state{padding:20px;color:#f87171;font-size:13px;display:flex;align-items:center;gap:8px;background:rgba(248,113,113,0.07);border-radius:8px;margin:16px 18px}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#444458}
+
+/* ── Responsive ── */
+@media(max-width:1000px){
+  .content{grid-template-columns:360px 1fr}
+}
+@media(max-width:820px){
+  .sidebar{display:none}
+  .content{grid-template-columns:1fr;padding:18px 16px}
+  .topbar{padding:14px 16px}
+  .topbar-right .platform-pill{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">✦</div>
+    <div>
+      <div class="logo-text">UGC Studio</div>
+      <div class="logo-sub">Ad Generator</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Generator
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Templates
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+        Saved Copies
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Analytics
+      </a>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Platforms</div>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        Facebook
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="currentColor" stroke="none"/></svg>
+        YouTube Shorts
+      </a>
+      <a class="nav-item" href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
+        TikTok
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="ai-badge">
+      <div class="ai-badge-dot"></div>
+      <span>AI Ready</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>UGC Ad Generator</h1>
+      <p>Create viral user-generated content — hooks, scripts, CTAs & captions</p>
+    </div>
+    <div class="topbar-right">
+      <div class="platform-pill">v1.0</div>
+
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ── Form Panel ── -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h2>Campaign Brief</h2>
+      </div>
+      <div class="panel-body">
+
+        <div class="field">
+          <label>Product / Business Name</label>
+          <input type="text" id="bizName" placeholder="e.g. Bean Haven Coffee" value="Bean Haven Coffee"/>
+        </div>
+
+        <div class="field">
+          <label>Product Category</label>
+          <select id="category">
+            <option value="Coffee &amp; Beverages">Coffee &amp; Beverages</option>
+            <option value="Food &amp; Snacks">Food &amp; Snacks</option>
+            <option value="Beauty &amp; Skincare">Beauty &amp; Skincare</option>
+            <option value="Fitness &amp; Wellness">Fitness &amp; Wellness</option>
+            <option value="Fashion &amp; Apparel">Fashion &amp; Apparel</option>
+            <option value="Tech &amp; Gadgets">Tech &amp; Gadgets</option>
+            <option value="Home &amp; Lifestyle">Home &amp; Lifestyle</option>
+            <option value="Education &amp; Courses">Education &amp; Courses</option>
+            <option value="SaaS / Software">SaaS / Software</option>
+            <option value="Restaurant &amp; Food Service">Restaurant &amp; Food Service</option>
+            <option value="Health &amp; Supplements">Health &amp; Supplements</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Target Audience</label>
+          <input type="text" id="audience" placeholder="e.g. Remote workers aged 25–35"/>
+        </div>
+
+        <div class="field">
+          <label>Brand Tone</label>
+          <div class="chips" id="toneChips">
+            <div class="chip selected" data-val="Friendly">😊 Friendly</div>
+            <div class="chip" data-val="Professional">💼 Professional</div>
+            <div class="chip" data-val="Casual">🤙 Casual</div>
+            <div class="chip" data-val="Bold &amp; Edgy">🔥 Bold &amp; Edgy</div>
+            <div class="chip" data-val="Inspirational">✨ Inspirational</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Platform</label>
+          <div class="chips" id="platformChips">
+            <div class="chip selected" data-val="Instagram Reels">📱 Instagram</div>
+            <div class="chip" data-val="Facebook Ads">👥 Facebook</div>
+            <div class="chip" data-val="YouTube Shorts">▶ YouTube Shorts</div>
+            <div class="chip" data-val="TikTok">🎵 TikTok</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Additional Context <span style="color:var(--text3);font-size:10px;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <textarea id="context" rows="2" placeholder="Special offers, USPs, seasonal campaigns, key benefits..."></textarea>
+        </div>
+
+        <button class="gen-btn" id="genBtn" onclick="generate()">
+          <span id="btnSpinner" style="display:none" class="spinner"></span>
+          <span id="btnIcon">✦</span>
+          <span id="btnText">Generate UGC Content</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ── Output Panel ── -->
+    <div class="output-panel" id="outputPanel">
+      <div class="output-card">
+        <div class="empty-state">
+          <div class="empty-glow">✦</div>
+          <h3>Ready to Generate</h3>
+          <p>Fill in your campaign brief on the left and hit Generate to create viral hooks, ad scripts, CTAs, and captions powered by Claude AI.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* ── Chip selection ── */
+  let selectedTone = 'Friendly';
+  let selectedPlatform = 'Instagram Reels';
+
+  document.querySelectorAll('#toneChips .chip').forEach(c => {
+    c.onclick = () => {
+      document.querySelectorAll('#toneChips .chip').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      selectedTone = c.dataset.val;
+    };
+  });
+  document.querySelectorAll('#platformChips .chip').forEach(c => {
+    c.onclick = () => {
+      document.querySelectorAll('#platformChips .chip').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      selectedPlatform = c.dataset.val;
+    };
+  });
+
+  /* ── Demo content library ── */
+  const demoData = {
+    hooks: [
+      [
+        "POV: You found the one thing that actually changed your morning routine forever — and it costs less than your daily Starbucks.",
+        "I was today years old when I discovered this… and now I can't stop telling everyone about it. Seriously, where has this been all my life?",
+        "Okay wait — why is nobody talking about this? I've tried everything and THIS is what actually worked for me."
+      ],
+      [
+        "Stop scrolling. I need you to see what happened when I tried this for just 7 days straight.",
+        "Real talk — I almost didn't try this. Now it's the one thing I can't imagine my day without.",
+        "This is your sign. The thing you've been looking for? I found it, and I'm not keeping it to myself."
+      ],
+      [
+        "I bought this on a whim and now my whole routine is different. No exaggeration.",
+        "My friend kept recommending this and I kept ignoring her. I was so wrong.",
+        "What if I told you the thing everyone's been hyping actually lives up to it? Because this one does."
+      ]
+    ],
+    scripts: [
+      `[SCENE: Creator holding product, casual home setting, natural light]\n\nOkay so I have to be honest with you guys — I was super skeptical at first. Like, I've seen so many of these products all over my feed and thought, yeah right, another overhyped thing.\n\n[SCENE: Close-up of product]\n\nBut then my sister wouldn't stop talking about it, so I finally caved and ordered one. And oh my god. Why did I wait so long?\n\n[SCENE: Creator smiling, gesturing naturally]\n\nThe first time I used it I genuinely texted her immediately like "okay you were right, I get it now." It just… works. Like actually works, not in a "I guess it's fine" way.\n\n[SCENE: Before/after or product in use]\n\nI've been using it every single day for the past three weeks and I'm already on my second order. That never happens with me. I'm the person who finishes like 10% of a product and forgets about it.\n\n[SCENE: Creator direct to camera, genuine expression]\n\nIf you've been on the fence, just get it. The link is in my bio and honestly, it's worth every rupee. Don't be like me and wait three months to try it.`,
+
+      `[SCENE: Creator in kitchen/workspace, relaxed vibe]\n\nCan I just take a second to talk about something that has genuinely made my life easier? Because I feel like not enough people know about this.\n\n[SCENE: Product shown naturally]\n\nI picked this up after seeing it recommended in like three different places and figured it was a sign. And yeah — universe was right on that one.\n\n[SCENE: Creator demonstrating or using product]\n\nWhat I love most is how simple it is. There's no complicated process, no learning curve. You just use it and immediately go "oh, that's why everyone loves this."\n\n[SCENE: Reaction shot, laughing or surprised]\n\nMy roommate literally borrowed mine last week and now she's ordering her own. That's the kind of product this is — the kind you end up buying for people as gifts because you want everyone to have it.\n\n[SCENE: Closing shot with product]\n\nSeriously check it out. I'll drop the link below. You're going to thank yourself later.`,
+
+      `[SCENE: Morning routine, authentic and unfiltered]\n\nNot me making a whole video about a product but here we are because I genuinely think you need this in your life.\n\n[SCENE: Product detail shot]\n\nI've been using this for about a month now and the difference is real. Like, people have actually noticed and started asking me what changed.\n\n[SCENE: Creator talking candidly]\n\nAnd the best part? It's not even expensive. I was expecting to spend way more for something that works this well. When I saw the price I honestly thought there must be a catch — there isn't.\n\n[SCENE: Product in action]\n\nI've already recommended it to my mom, my two best friends, and apparently now all of you. So yeah, it's that good.\n\n[SCENE: Final look at camera]\n\nLink is down below. Go check it out, read the reviews, and then come back and tell me I was right. Because I was.`
+    ],
+    ctas: [
+      ["Tap the link in bio — limited stock, don't sleep on it!", "Join 10,000+ people who already switched. Order yours today.", "First order? Use code FIRST10 for 10% off. Link below! 👇"],
+      ["Shop now before it sells out — this keeps going viral for a reason.", "DM us 'INFO' and we'll send you everything you need to know.", "Click the link, read the reviews, thank yourself later. 🙌"],
+      ["Order today and get free shipping — offer ends Sunday!", "See why everyone's talking about it. Link in bio 👆", "Don't wait — grab yours now and feel the difference yourself."]
+    ],
+    captions: [
+      `Okay I was NOT expecting to love this as much as I do 😭✨ Tried it for the first time last week and now I genuinely can't stop recommending it to everyone I know.\n\nIf you've been on the fence, this is your sign 👇\n\n#ugccreator #productreview #musthave #thatgirl #lifestyleproduct #honestreview #smallbusiness #viral`,
+      `POV: you finally try the thing everyone's been hyping and it actually delivers 🤯☕\n\nNot an exaggeration when I say this changed my routine. Details + link in bio!\n\n#reels #ugcads #contentcreator #dayinmylife #productfinds #aesthetic #musttry #trending`,
+      `Real ones know 🙌 This has been my go-to for 3 weeks straight and I'm already reordering. That says everything.\n\nDrop a ❤️ if you want a full honest review!\n\n#ugc #brandpartner #lifestyle #honest #review #fyp #explorepage #smallbiz #localbusiness`
+    ]
+  };
+
+  /* ── Generate (Demo Mode) ── */
+  async function generate() {
+    const bizName = document.getElementById('bizName').value.trim() || 'the brand';
+
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    document.getElementById('btnSpinner').style.display = 'block';
+    document.getElementById('btnIcon').style.display = 'none';
+    document.getElementById('btnText').textContent = 'Generating…';
+
+    /* Simulate AI thinking time */
+    await new Promise(r => setTimeout(r, 2200));
+
+    /* Pick a random variation so each generation feels different */
+    const v = Math.floor(Math.random() * 3);
+    const biz = bizName !== 'the brand' ? bizName : 'Bean Haven Coffee';
+
+    /* Personalise hooks with the business name */
+    const hooks = demoData.hooks[v].map(h =>
+      h.replace(/this product|this thing|this/g, (m, offset, str) => {
+        if (offset < 30) return biz;
+        return m;
+      })
+    );
+
+    /* Lightly inject biz name into script */
+    const script = demoData.scripts[v].replace(
+      'Not me making a whole video about a product',
+      `Not me making a whole video about ${biz}`
+    ).replace(
+      'Okay so I have to be honest with you guys',
+      `Okay so I have to be honest with you guys about ${biz}`
+    ).replace(
+      `Can I just take a second to talk about something`,
+      `Can I just take a second to talk about ${biz}`
+    );
+
+    const result = {
+      hooks,
+      script,
+      ctas: demoData.ctas[v],
+      caption: demoData.captions[v]
+    };
+
+    btn.disabled = false;
+    document.getElementById('btnSpinner').style.display = 'none';
+    document.getElementById('btnIcon').style.display = 'inline';
+    document.getElementById('btnText').textContent = 'Generate UGC Content';
+
+    renderOutput(result, biz, selectedPlatform);
+  }
+
+  /* ── Render output ── */
+  function renderOutput(d, biz, platform) {
+    const panel = document.getElementById('outputPanel');
+    panel.innerHTML = `
+
+      <!-- Hooks -->
+      <div class="output-card">
+        <div class="oc-header">
+          <div class="oc-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Viral Hooks
+          </div>
+          <span class="oc-badge badge-purple">3 hooks</span>
+        </div>
+        <div class="oc-body">
+          ${d.hooks.map((h, i) => `
+            <div class="hook-item" onclick="copyText(this, ${JSON.stringify(h)})">
+              <div class="hook-num">Hook ${i + 1}</div>
+              ${escHtml(h)}
+              <div class="hook-copy-hint">click to copy</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Script -->
+      <div class="output-card">
+        <div class="oc-header">
+          <div class="oc-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            UGC Ad Script
+          </div>
+          <button class="copy-btn" onclick="copyTextBtn(this, ${JSON.stringify(d.script)})">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy Script
+          </button>
+        </div>
+        <div class="oc-body">
+          <div class="block-label">On-camera script · ${escHtml(platform)}</div>
+          <div class="script-block">${escHtml(d.script)}</div>
+        </div>
+      </div>
+
+      <!-- CTAs -->
+      <div class="output-card">
+        <div class="oc-header">
+          <div class="oc-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Call To Actions
+          </div>
+          <span class="oc-badge badge-amber">3 CTAs</span>
+        </div>
+        <div class="oc-body">
+          <div class="cta-grid">
+            ${d.ctas.map(c => `
+              <div class="cta-item" onclick="copyText(this, ${JSON.stringify(c)})">${escHtml(c)}</div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Caption -->
+      <div class="output-card">
+        <div class="oc-header">
+          <div class="oc-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Social Media Caption
+          </div>
+          <button class="copy-btn" onclick="copyTextBtn(this, ${JSON.stringify(d.caption)})">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy Caption
+          </button>
+        </div>
+        <div class="oc-body">
+          <div class="caption-block">${escHtml(d.caption)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ── Helpers ── */
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function copyText(el, text) {
+    navigator.clipboard.writeText(text).catch(() => {});
+    const orig = el.innerHTML;
+    el.style.background = 'rgba(34,197,94,0.08)';
+    el.style.borderColor = 'rgba(34,197,94,0.3)';
+    setTimeout(() => {
+      el.style.background = '';
+      el.style.borderColor = '';
+    }, 1500);
+  }
+
+  function copyTextBtn(btn, text) {
+    navigator.clipboard.writeText(text).catch(() => {});
+    btn.classList.add('copied');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = orig;
+    }, 2000);
+  }
+</script>
+</body>
+</html>
