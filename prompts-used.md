@@ -53,6 +53,7 @@ Sidebar navigation
 Professional marketing tool appearance
 
 Prompt 2 
+
 Viral Hooks Generator
 
 Act as a professional UGC content creator.
