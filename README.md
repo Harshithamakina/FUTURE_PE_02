@@ -14,6 +14,7 @@ GitHub Repository
 ✨ Features
 
 🔥 3 Viral Hooks — scroll-stopping openers for any product
+
 📄 UGC Ad Script — full on-camera script with [SCENE] markers, authentic tone
 🎯 3 Call-To-Actions (CTAs) — urgency, social proof, and benefit-led variants
 💬 Social Media Caption — platform-optimised with emojis and hashtags
