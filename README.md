@@ -10,8 +10,6 @@ Built an AI-powered UGC (User-Generated Content) Ad Generator that creates viral
 🔗 Live Demo
 [https://lovely-fenglisu-93740e.netlify.app]
 
-GitHub Repository
-[https://github.com/Harshithamakina/FUTURE_PE_02]
 
 
 ✨ Features
