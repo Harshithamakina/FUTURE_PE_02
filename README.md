@@ -6,7 +6,7 @@ Task 2 — AI Content Marketing using UGC Ads
 Built an AI-powered UGC (User-Generated Content) Ad Generator that creates viral marketing content for any business or product using structured prompt engineering techniques.
 
 🔗 Live Demo
-[lovely-fenglisu-93740e.netlify.app]
+[https://lovely-fenglisu-93740e.netlify.app]
 
 GitHub Repository
 [https://github.com/Harshithamakina/FUTURE_PE_02]
