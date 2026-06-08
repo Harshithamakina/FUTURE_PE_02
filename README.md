@@ -35,9 +35,47 @@ GitHub Repository
 
 
 Learning Outcomes
+
 Prompt Engineering
+
 AI Content Marketing
+
 UGC Ad Creation
+
 Social Media Content Strategy
+
 Content Generation Using AI
+
 GitHub Project Documentation
+
+
+Example Campaign
+
+Business Name
+
+Bean Haven Coffee
+
+
+Target Audience
+
+Students
+
+Remote Workers
+
+Freelancers
+
+
+Brand Tone
+
+Friendly
+
+
+Generated Content
+
+Viral Hooks
+
+UGC Ad Scripts
+
+Social Media Captions
+
+CTAs
